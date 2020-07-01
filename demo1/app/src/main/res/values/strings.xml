@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">demo</string>
+    <string name="toolbar_return_string"><![CDATA[<]]></string>
+</resources>

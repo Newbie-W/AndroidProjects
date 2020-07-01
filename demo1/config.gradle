@@ -1,0 +1,32 @@
+ext {
+    android = [
+            compileSdkVersion: 28,
+            buildToolsVersion: "28.0.3",
+            minSdkVersion    : 21,
+            targetSdkVersion : 28,
+            versionCode      : 1,
+            versionName      : "1.0.0"
+    ]
+
+    manifestPlaceholders = [
+            //服务器地址  
+            serverHost       : "域名",
+
+            //极光推送 IM       
+            jpushAppKey      : "8**8",
+
+            //腾讯地图           
+            txMapAppKey      : "**",
+            txMapAppSecret   : "",
+            //腾讯bugly       
+            buglyAppId       : "",
+            //百度语音识别        update---20200628
+            baiduAppId       : "",
+            baiduAppKey      : "",
+            baiduAppSecretKey: "",
+            //友盟统计           update---20200628
+            umengAppKey      : ""
+
+    ]
+
+}
