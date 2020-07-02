@@ -4,10 +4,10 @@ android {
     buildToolsVersion rootProject.ext.android.buildToolsVersion
     signingConfigs {
         release {
-            keyAlias 'phonelive'
-            keyPassword 'phonelive'
-            //storeFile file('../yunbao.jks')		//该文件未上传
-            storePassword 'phonelive'
+            keyAlias ''
+            keyPassword ''
+            //storeFile file('../y.jks')		//该文件未上传
+            storePassword ''
         }
     }
 

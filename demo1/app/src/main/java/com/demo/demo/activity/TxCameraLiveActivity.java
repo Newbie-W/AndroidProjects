@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TxCameraLiveActivity extends AppCompatActivity implements ITXLivePushListener {
+public class TxCameraLiveActivity extends AppCompatActivity implements ITXLivePushListener, com.tencent.rtmp.TXLivePusher.OnBGMNotify {
 
     private TXLivePushConfig mLivePushConfig;
     private TXLivePusher mLivePusher;
@@ -214,8 +214,10 @@ public class TxCameraLiveActivity extends AppCompatActivity implements ITXLivePu
 
         //播放回调
         mLivePusher.setPushListener(this);
-        //监听声音 mLivePusher.setBGMNofify(this);
-        //麦克风推流 mLivePusher.setMute(mPushMoreFragment.isMuteAudio());
+        //监听声音
+        mLivePusher.setBGMNofify(this);
+        //麦克风推流
+        mLivePusher.setMute(false);
 
         liveCameraView.setVisibility(View.VISIBLE);
         if (isUseCamera) {
@@ -270,7 +272,7 @@ public class TxCameraLiveActivity extends AppCompatActivity implements ITXLivePu
     private void stopRTMPPush() {
 
         // 停止BGM
-        //mLivePusher.stopBGM();
+        mLivePusher.stopBGM();
 
         if (isUseCamera) {
             mLivePusher.stopCameraPreview(true);    //停止本地预览
@@ -291,6 +293,21 @@ public class TxCameraLiveActivity extends AppCompatActivity implements ITXLivePu
 
     @Override
     public void onNetStatus(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onBGMStart() {
+
+    }
+
+    @Override
+    public void onBGMProgress(long l, long l1) {
+
+    }
+
+    @Override
+    public void onBGMComplete(int i) {
 
     }
 }
