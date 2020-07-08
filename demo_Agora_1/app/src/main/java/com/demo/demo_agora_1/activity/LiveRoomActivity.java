@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
@@ -30,9 +31,10 @@ public class LiveRoomActivity extends AppCompatActivity {
 
     private String liveRoomId, token = "";
     private List<Integer> mUidList = new ArrayList<>(4);
+    private SparseArray<SurfaceView> mUserViewList = new SparseArray<SurfaceView>(4);
     private int isAudience;
     // 创建 SurfaceView 对象。
-    private FrameLayout mLocalContainer;
+    private FrameLayout mLocalContainer, mRemoteContainer;
 
     private boolean isAudioMute = true, isCameraMute = true;
     private int uid = 1;
@@ -115,7 +117,8 @@ public class LiveRoomActivity extends AppCompatActivity {
         audioPlayBtn = findViewById(R.id.btn_audio);
         switchCameraBtn = findViewById(R.id.btn_switch_camera);
         returnBtn = findViewById(R.id.btn_return);
-        mLocalContainer = findViewById(R.id.layout_video_view);
+        mLocalContainer = findViewById(R.id.layout_video_view1);
+        mRemoteContainer = findViewById(R.id.layout_video_view2);
         textViewTitle = findViewById(R.id.textView_title);
 
         textViewTitle.setText("直播间名称（ID）： " + liveRoomId);
@@ -207,30 +210,32 @@ public class LiveRoomActivity extends AppCompatActivity {
     }
 
     private void setupRemoteVideo(int uid) {
-        if (mLocalContainer.getChildCount() >= 1) {
+        if (mRemoteContainer.getChildCount() >= 1) {
             return ;
         }
         SurfaceView mLocalView = RtcEngine.CreateRendererView(getBaseContext());
-        mLocalContainer.addView(mLocalView);
+        mRemoteContainer.addView(mLocalView);
         mLocalView.setTag(uid);
         if (mUidList.contains(uid)) {
             mUidList.remove((Integer) uid);
-            //mUserViewList.remove(uid);
+            //mUserViewList.remove((Integer)uid);
         }
 
         if (mUidList.size() < 4) {
-            //id = uid;
+            // id = uid;
         }
         mUidList.add(uid);
+        mUserViewList.append((Integer)uid, mLocalView);
         mRtcEngine.setupRemoteVideo(new VideoCanvas(mLocalView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
     }
 
     private void onRemoteUserLeft(int uid) {
         Log.d(TAG, "test");
-        mLocalContainer.removeAllViews();
+        mRemoteContainer.removeAllViews();
         mRtcEngine.setupRemoteVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_HIDDEN, uid));
         if (mUidList.contains(uid)) {
             mUidList.remove((Integer) uid);
+            //mUserViewList.remove((Integer)uid);
         }
     }
 
@@ -256,12 +261,13 @@ public class LiveRoomActivity extends AppCompatActivity {
         mRtcEngine.setupLocalVideo(null);
         if (mUidList.contains(0)) {
             mUidList.remove(0);
+            mUserViewList.remove(0);
         }
         SurfaceView mLocalView = RtcEngine.CreateRendererView(getBaseContext());
         mLocalView.setZOrderMediaOverlay(true);
         mLocalView.setVisibility(isCameraMute ? View.GONE : View.VISIBLE);
         mLocalContainer.removeAllViews();
-        mRtcEngine.muteLocalAudioStream(false);
+        mRtcEngine.muteLocalAudioStream(true);
         videoPlayBtn.setText("开启摄像头");
         Log.d(TAG, "---关闭直播---");
     }
@@ -274,13 +280,14 @@ public class LiveRoomActivity extends AppCompatActivity {
         // 设置本地视图。
         VideoCanvas localVideoCanvas = new VideoCanvas(mLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
         mRtcEngine.setupLocalVideo(localVideoCanvas);
+        mUserViewList.append((Integer)uid, mLocalView);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //if (!mCallEnd) {
-            leaveChannel();
+        leaveChannel();
         //}
         RtcEngine.destroy();
         mRtcEngine = null;

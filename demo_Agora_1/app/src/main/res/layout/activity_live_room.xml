@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
      android:layout_height="match_parent">
 
     <!--
@@ -12,9 +13,18 @@
 
 
     <FrameLayout
-        android:id="@+id/layout_video_view"
+        android:id="@+id/layout_video_view1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="300dp">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_video_view2"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/layout_video_view1"
+        tools:visibility="visible">
 
     </FrameLayout>
 
